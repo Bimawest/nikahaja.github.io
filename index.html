@@ -1485,7 +1485,10 @@ footer a:hover {
 
 <body>
   <div id="video-container">
-  <video id="intro-video" autoplay muted>
+  <video id="intro-video"
+  controls="controls"
+  autoplay="autoplay" playsinline
+  >
     <source src="video-intro.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
@@ -1680,14 +1683,15 @@ footer a:hover {
   </footer> 
 
   <div id="audio-container">
-    <audio id="song" loop>
-      <source src="save-and-sound.mp3" type="audio/mp3">
+    <audio id="song" preload="auto">
+        <source src="save-and-sound.mp3" type="audio/mp3">
+        Your browser does not support HTML5 audio.
     </audio>
-
     <div class="audio-icon-wrapper" style="display: flex;">
-      <i class="bi bi-disc"></i>
+        <i class="bi bi-disc"></i>
     </div>
-  </div>
+</div>
+
 
     <!-- script ucapan -->
 <script>const form = document.getElementById('myForms');
@@ -1769,69 +1773,74 @@ footer a:hover {
   });
 </script>
 
-<!-- script enableScroll and fullscreen -->
 <script>
   // Variabel untuk menyimpan status scroll
-  let isScrollEnabled = false;
+let isScrollEnabled = false;
 
-  // Fungsi untuk menonaktifkan scroll
-  function disableScroll() {
-      if (!isScrollEnabled) {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+// Fungsi untuk menonaktifkan scroll
+function disableScroll() {
+    if (!isScrollEnabled) {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-          window.onscroll = function() {
-              window.scrollTo(scrollTop, scrollLeft);
-          };
-          document.body.style.overflow = 'hidden'; // Menyembunyikan scroll
-          isScrollEnabled = false; // Set status scroll
-      }
-  }
+        window.onscroll = function() {
+            window.scrollTo(scrollLeft, scrollTop);
+        };
+        document.body.style.overflow = 'hidden'; // Menyembunyikan scroll
+        isScrollEnabled = false; // Set status scroll
+    }
+}
 
-  // Fungsi untuk mengaktifkan scroll
-  function enableScroll() {
-      window.onscroll = function() {}; // Menghapus fungsi scroll
-      document.body.style.overflow = 'auto'; // Mengizinkan scroll
-      isScrollEnabled = true; // Set status scroll
-  }
+// Fungsi untuk mengaktifkan scroll
+function enableScroll() {
+    window.onscroll = function() {}; // Menghapus fungsi scroll
+    document.body.style.overflow = 'auto'; // Mengizinkan scroll
+    isScrollEnabled = true; // Set status scroll
+}
+</script>
 
+<script>
   // Fungsi untuk meminta fullscreen
-  function requestFullscreen() {
-      if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-          disableScroll(); // Nonaktifkan scroll saat masuk fullscreen
-      } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-          document.documentElement.mozRequestFullScreen();
-          disableScroll();
-      } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari & Opera
-          document.documentElement.webkitRequestFullscreen();
-          disableScroll();
-      } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-          document.documentElement.msRequestFullscreen();
-          disableScroll();
-      }
-  }
+function requestFullscreen() {
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+        disableScroll(); // Nonaktifkan scroll saat masuk fullscreen
+    } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+        document.documentElement.mozRequestFullScreen();
+        disableScroll();
+    } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari & Opera
+        document.documentElement.webkitRequestFullscreen();
+        disableScroll();
+    } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+        document.documentElement.msRequestFullscreen();
+        disableScroll();
+    }
+}
 
-  // Fungsi untuk keluar dari fullscreen
-  function exitFullscreen() {
-      if (document.exitFullscreen) {
-          document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) { // Firefox
-          document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) { // Chrome, Safari & Opera
-          document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { // IE/Edge
-          document.msExitFullscreen();
-      }
-  }
+// Fungsi untuk keluar dari fullscreen
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari & Opera
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+    }
+}
+</script>
 
+<script>
   // Event listener untuk mendeteksi perubahan fullscreen
-  document.addEventListener("fullscreenchange", function() {
-      if (!document.fullscreenElement) {
-          enableScroll(); // Aktifkan scroll saat keluar dari fullscreen
-      }
-  });
+document.addEventListener("fullscreenchange", function() {
+    if (!document.fullscreenElement) {
+        enableScroll(); // Aktifkan scroll saat keluar dari fullscreen
+    }
+});
+</script>
 
+<script>
   // Event listener untuk tombol "OPEN INVITATION"
 const openInvitationButton = document.getElementById("tombolFullscreen");
 const audio = document.getElementById('song'); // Ambil elemen audio
@@ -1840,12 +1849,15 @@ if (openInvitationButton) {
     openInvitationButton.addEventListener("click", function() {
         requestFullscreen();
         enableScroll(); // Aktifkan scroll setelah tombol diklik
-        audio.play(); // Mulai memutar audio saat tombol diklik
+        
+        // Pastikan audio.play() dipanggil langsung setelah interaksi pengguna
+        audio.play().then(() => {
+            console.log("Audio is playing");
+        }).catch((error) => {
+            console.error("Audio playback failed:", error);
+        });
     });
 }
-
-  // Nonaktifkan scroll saat halaman dimuat
-  disableScroll();
 </script>
 
 <!-- script cover fade -->
